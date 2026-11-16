@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trailhead Supply (demo site)</title>
+<style>
+  :root { --navy:#0b2559; --coral:#f54a6f; --ink:#1d2433; --muted:#5d6678; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system, Segoe UI, Roboto, sans-serif; color:var(--ink); background:#f6f7fb; }
+  .demo-note { background:#fff4d6; color:#5a4500; font-size:13px; padding:8px 16px; text-align:center; }
+  header { background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:space-between; padding:14px 16px; position:relative; }
+  .logo { font-weight:800; font-size:18px; }
+  nav { position:relative; }
+  /* BROKEN on touch: the menu only opens on :hover. The trigger is a plain div with no click handler. */
+  .menu-trigger { padding:8px 12px; border:1px solid rgba(255,255,255,.4); border-radius:6px; font-size:15px; }
+  .menu { display:none; position:absolute; right:0; top:42px; background:#fff; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.18); min-width:200px; z-index:10; }
+  .menu a { display:block; padding:12px 16px; color:var(--ink); text-decoration:none; border-bottom:1px solid #eee; }
+  nav:hover .menu { display:block; }
+  /* FIXED version: a real button that toggles the menu */
+  .fixed nav:hover .menu { display:none; }
+  .fixed .menu.open { display:block; }
+  .menu-button { background:none; color:#fff; padding:8px 12px; border:1px solid rgba(255,255,255,.4); border-radius:6px; font-size:16px; }
+  .hero { padding:28px 16px; background:#fff; }
+  .hero h1 { margin:0 0 8px; font-size:26px; }
+  .hero p { margin:0; color:var(--muted); }
+  section { padding:20px 16px; }
+  .card { background:#fff; border-radius:10px; padding:18px; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+  label { display:block; font-size:13px; font-weight:600; margin:14px 0 6px; }
+  /* BROKEN on iPhone: inputs under 16px make Safari zoom in on focus */
+  input { width:100%; padding:10px; font-size:13px; border:1px solid #c9cfdb; border-radius:6px; }
+  .fixed input { font-size:16px; }
+  .submit { margin-top:18px; width:100%; padding:14px; font-size:16px; font-weight:700; color:#fff; background:var(--coral); border:0; border-radius:8px; }
+  .result { margin-top:14px; font-size:14px; color:var(--muted); min-height:20px; }
+  /* BROKEN on small screens: a fixed banner covers the bottom of the page and the page has no room under it */
+  .banner { position:fixed; left:0; right:0; bottom:0; background:var(--navy); color:#fff; padding:16px; font-size:14px; display:flex; gap:12px; align-items:center; justify-content:space-between; min-height:110px; z-index:5; }
+  .banner button { background:#fff; color:var(--navy); border:0; border-radius:6px; padding:10px 14px; font-weight:700; }
+  .fixed body, body.fixed { padding-bottom:130px; }
+  footer { padding:20px 16px; color:var(--muted); font-size:13px; }
+</style>
+</head>
+<body>
+<div class="demo-note">Demo site for mobile testing. Not a real store. Add <b>?fixed=1</b> to the URL for the fixed version.</div>
+<header>
+  <div class="logo">Trailhead Supply</div>
+  <nav id="nav">
+    <div class="menu-trigger" id="trigger">Shop &#9662;</div>
+    <div class="menu" id="menu">
+      <a href="#tents">Tents</a><a href="#packs">Backpacks</a><a href="#boots">Boots</a><a href="#track">Track an order</a>
+    </div>
+  </nav>
+</header>
+<div class="hero">
+  <h1>Gear for the long way round</h1>
+  <p>Free returns for 60 days. Track any order below.</p>
+</div>
+<section id="tents"><div class="card"><b>Ridgeline 2 Tent</b><br><span style="color:#5d6678">Two person, 1.8 kg</span></div></section>
+<section id="packs"><div class="card"><b>Switchback 40L Pack</b><br><span style="color:#5d6678">Fits a 15 inch laptop</span></div></section>
+<section id="track">
+  <div class="card">
+    <h2 style="margin:0;font-size:20px">Track an order</h2>
+    <form id="form">
+      <label for="email">Email</label><input id="email" type="email" placeholder="you@example.com">
+      <label for="order">Order number</label><input id="order" inputmode="numeric" placeholder="10482">
+      <label for="zip">ZIP code</label><input id="zip" inputmode="numeric" placeholder="30030">
+      <button class="submit" type="submit">Check status</button>
+      <div class="result" id="result" aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+<footer>Trailhead Supply is a made-up store for testing.</footer>
+<div class="banner" id="banner"><span>We use cookies to remember your cart.</span><button id="accept">Accept</button></div>
+<script>
+  const fixed = new URLSearchParams(location.search).get('fixed') === '1';
+  if (fixed) {
+    document.body.classList.add('fixed');
+    const old = document.getElementById('trigger');
+    const btn = document.createElement('button');
+    btn.className = 'menu-button'; btn.innerHTML = 'Shop &#9662;';
+    btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-controls', 'menu');
+    old.replaceWith(btn);
+    const menu = document.getElementById('menu');
+    btn.addEventListener('click', () => { const open = menu.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open)); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); btn.focus(); } });
+    document.getElementById('accept').addEventListener('click', () => document.getElementById('banner').remove());
+  }
+  // The status check makes a real network call that takes about 3 seconds, so response time and network capture have something to show.
+  document.getElementById('form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const out = document.getElementById('result');
+    out.textContent = 'Checking...';
+    const t0 = performance.now();
+    try {
+      await fetch('https://httpbin.org/delay/3?order=' + encodeURIComponent(document.getElementById('order').value || '10482'));
+      out.textContent = 'Order shipped. Took ' + ((performance.now() - t0) / 1000).toFixed(1) + ' s to answer.';
+    } catch (err) {
+      out.textContent = 'Could not reach the status service.';
+    }
+  });
+</script>
+</body>
+</html>
