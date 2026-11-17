@@ -3,12 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trailhead Supply (demo site)</title>
+<title>Trailhead Supply | Kobiton demo site</title>
+<link rel="icon" href="kobiton-logo.png">
 <style>
   :root { --navy:#0b2559; --coral:#f54a6f; --ink:#1d2433; --muted:#5d6678; }
   * { box-sizing:border-box; }
   body { margin:0; font-family:-apple-system, Segoe UI, Roboto, sans-serif; color:var(--ink); background:#f6f7fb; }
-  .demo-note { background:#fff4d6; color:#5a4500; font-size:13px; padding:8px 16px; text-align:center; }
+  .demo-note { background:#fff; color:#3a4255; font-size:13px; padding:8px 16px; display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; border-bottom:1px solid #e3e6ee; }
+  .demo-note img { height:22px; width:auto; }
+  .k-footer { display:flex; align-items:center; gap:8px; }
+  .k-footer img { height:20px; width:auto; }
   header { background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:space-between; padding:14px 16px; position:relative; }
   .logo { font-weight:800; font-size:18px; }
   nav { position:relative; }
@@ -40,7 +44,7 @@
 </style>
 </head>
 <body>
-<div class="demo-note">Demo site for mobile testing. Not a real store. Add <b>?fixed=1</b> to the URL for the fixed version.</div>
+<div class="demo-note"><img src="kobiton-logo.png" alt="Kobiton"><span>Demo site for mobile testing. Not a real store. Add <b>?fixed=1</b> to the URL for the fixed version.</span></div>
 <header>
   <div class="logo">Trailhead Supply</div>
   <nav id="nav">
@@ -68,7 +72,7 @@
     </form>
   </div>
 </section>
-<footer>Trailhead Supply is a made-up store for testing.</footer>
+<footer><div class="k-footer"><span>A Kobiton demo site.</span><img src="kobiton-logo.png" alt="Kobiton"></div><div>Trailhead Supply is a made-up store for testing.</div></footer>
 <div class="banner" id="banner"><span>We use cookies to remember your cart.</span><button id="accept">Accept</button></div>
 <script>
   const fixed = new URLSearchParams(location.search).get('fixed') === '1';
