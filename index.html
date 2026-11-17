@@ -51,7 +51,7 @@
   <nav id="nav">
     <div class="menu-trigger" id="trigger">Shop &#9662;</div>
     <div class="menu" id="menu">
-      <a href="#tents">Tents</a><a href="#packs">Backpacks</a><a href="#boots">Boots</a><a href="#track">Track an order</a>
+      <a href="#tents" data-category="tents">Tents</a><a href="#packs" data-category="packs">Backpacks</a><a href="#boots" data-category="boots">Boots</a><a href="#track">Track an order</a>
     </div>
   </nav>
 </header>
@@ -59,8 +59,7 @@
   <h1>Gear for the long way round</h1>
   <p>Free returns for 60 days. Track any order below.</p>
 </div>
-<section id="tents"><div class="card"><b>Ridgeline 2 Tent</b><br><span style="color:#5d6678">Two person, 1.8 kg</span></div></section>
-<section id="packs"><div class="card"><b>Switchback 40L Pack</b><br><span style="color:#5d6678">Fits a 15 inch laptop</span></div></section>
+<div id="products"><section><div class="card">Loading products...</div></section></div>
 <footer><div>A Kobiton demo site.</div><div>Trailhead Supply is a made-up store for testing.</div></footer>
 <section id="track">
   <div class="card">
@@ -88,6 +87,24 @@
     btn.addEventListener('click', () => { const open = menu.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open)); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') { menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); btn.focus(); } });
     document.getElementById('accept').addEventListener('click', () => document.getElementById('banner').remove());
+  }
+  // Network traffic so Network Payload Capture and Response Time Analysis have something to show.
+  // Page load: product list from this site.
+  fetch('products.json?v=' + Date.now()).then(r => r.json()).then(list => {
+    document.getElementById('products').innerHTML = list.map(p => '<section id="' + p.category + '"><div class="card"><b>' + p.name + '</b><br><span style="color:#5d6678">' + p.detail + '</span></div></section>').join('');
+  }).catch(() => {});
+  // Menu items: load that category from the catalog service (fast call).
+  document.querySelectorAll('#menu a[data-category]').forEach(a => a.addEventListener('click', () => {
+    fetch('https://httpbin.org/anything/catalog?category=' + a.dataset.category);
+  }));
+  if (fixed) {
+    // Accept: record consent with a POST, then close the banner.
+    const acc = document.getElementById('accept');
+    const clone = acc.cloneNode(true); acc.replaceWith(clone);
+    clone.addEventListener('click', () => {
+      fetch('https://httpbin.org/anything/consent', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({cookies:'accepted'})});
+      document.getElementById('banner').remove();
+    });
   }
   // The status check makes a real network call that takes about 3 seconds, so response time and network capture have something to show.
   document.getElementById('form').addEventListener('submit', async e => {
