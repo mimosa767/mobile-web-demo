@@ -10,11 +10,13 @@
   * { box-sizing:border-box; }
   body { margin:0; font-family:-apple-system, Segoe UI, Roboto, sans-serif; color:var(--ink); background:#f6f7fb; }
   .demo-note { background:#fff; color:#3a4255; font-size:13px; padding:8px 16px; display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; border-bottom:1px solid #e3e6ee; }
-  .demo-note img { height:22px; width:auto; }
+  .demo-note img { height:32px; width:auto; }
   .k-footer { display:flex; align-items:center; gap:8px; }
-  .k-footer img { height:20px; width:auto; }
+  .k-footer img { height:28px; width:auto; }
   header { background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:space-between; padding:14px 16px; position:relative; }
-  .logo { font-weight:800; font-size:18px; }
+  .logo { font-weight:800; font-size:18px; display:flex; align-items:center; gap:10px; }
+  .k-pill { background:#fff; border-radius:8px; padding:5px 8px; display:flex; }
+  .k-pill img { height:24px; width:auto; display:block; }
   nav { position:relative; }
   /* BROKEN on touch: the menu only opens on :hover. The trigger is a plain div with no click handler. */
   .menu-trigger { padding:8px 12px; border:1px solid rgba(255,255,255,.4); border-radius:6px; font-size:15px; }
@@ -46,7 +48,7 @@
 <body>
 <div class="demo-note"><img src="kobiton-logo.png" alt="Kobiton"><span>Demo site for mobile testing. Not a real store. Add <b>?fixed=1</b> to the URL for the fixed version.</span></div>
 <header>
-  <div class="logo">Trailhead Supply</div>
+  <div class="logo"><span class="k-pill"><img src="kobiton-logo.png" alt="Kobiton"></span>Trailhead Supply</div>
   <nav id="nav">
     <div class="menu-trigger" id="trigger">Shop &#9662;</div>
     <div class="menu" id="menu">
